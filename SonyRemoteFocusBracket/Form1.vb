@@ -46,8 +46,8 @@
 
         Dim msg As String = "Procedure:" + vbCrLf + "Start Imaging Edge Remote," + vbCrLf + "connect your camera," + vbCrLf + "change camera to manual focus mode," + vbCrLf + "focus on start position"
         Info.Text = msg
-
         checkForRemote()
+
     End Sub
     Private Sub wait(ByVal seconds As Integer)
         For i As Integer = 0 To seconds * 100

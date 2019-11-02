@@ -7,7 +7,6 @@ Partial Class From1
     Public Shared Coarsness As String = "y"    'Focus speed: y=fast, t=medium, r=slow
     Public Shared Intervall As Integer = 1000   'Time between each shoot in miliseconds
     Dim KeyStr As New Dictionary(Of String, String) From {{"Coarse", "y"}, {"Medium", "t"}, {"Fine", "r"}}
-
     'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
     <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
