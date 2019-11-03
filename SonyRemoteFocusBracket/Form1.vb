@@ -1,8 +1,15 @@
 ﻿Public Class From1
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnStart.Click
 
+        If boStackState = True Then
+            boStackState = False
+            btnStart.Text = strButtonText(boStackState)
+            btnStart.FlatStyle = FlatStyle.Standard
+            Exit Sub
+        End If
+
         Try
-            From1.Amount = txtAmount.Text
+            Amount = txtAmount.Text
         Catch ex As Exception
             ToolStripStatusLabel1.Text = "Wrong Amount Number Format only must use Integer Values"
             Exit Sub
@@ -10,7 +17,7 @@
 
 
         Try
-            From1.Intervall = txtIntervall.Text
+            Intervall = txtIntervall.Text
         Catch ex As Exception
             ToolStripStatusLabel1.Text = "Wrong Intervall Number Format only must use Integer Values"
             Exit Sub
@@ -26,20 +33,45 @@
             End If
         Next
 
-        'MsgBox(FireKey)
-        checkForRemote()
+
+        If checkForRemote() = False Then Exit Sub
+
+        btnStart.FlatStyle = FlatStyle.Flat
+
+        Timer1.Start()
+        boStackState = True
+        btnStart.Text = strButtonText(boStackState)
         ToolStripStatusLabel1.Text = "Fire Focus Forward " + frKey + " and Release Camera Image 1"
-        System.Windows.Forms.SendKeys.SendWait("1")
-        Me.wait(From1.Intervall)
+        If cbxShoot.Checked = False Then System.Windows.Forms.SendKeys.SendWait("1")
+        wait(From1.Intervall)
+
         For i As Integer = 1 To From1.Amount - 1
-            'ToolStripStatusLabel1.Text = "Waiting " + Form1.Intervall.ToString + "ms ..."
-            checkForRemote()
+
+            If boStackState = False Then
+                btnStart.FlatStyle = FlatStyle.Standard
+                Exit For
+            End If
+            If checkForRemote() = False Then
+                btnStart.FlatStyle = FlatStyle.Standard
+                boStackState = False
+                btnStart.Text = strButtonText(boStackState)
+                Exit Sub
+            End If
+
             ToolStripStatusLabel1.Text = "Fire Focus Forward " + frKey + " and Release Camera Image " + (i + 1).ToString
             System.Windows.Forms.SendKeys.SendWait(FireKey)
-            System.Windows.Forms.SendKeys.SendWait("1")
-            Me.wait(From1.Intervall)
+            If cbxShoot.Checked = False Then System.Windows.Forms.SendKeys.SendWait("1")
+            wait(From1.Intervall)
+
         Next
+
         ToolStripStatusLabel1.Text = "Finished !!!"
+
+        Timer1.Stop()
+        boStackState = False
+        btnStart.FlatStyle = FlatStyle.Standard
+        btnStart.Text = strButtonText(boStackState)
+
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -55,19 +87,29 @@
             Application.DoEvents()
         Next
     End Sub
-    Private Sub checkForRemote()
+    Private Function checkForRemote()
         Try
             Microsoft.VisualBasic.Interaction.AppActivate("Remote")
-            Me.btnStart.Enabled = True
+            btnStart.Enabled = True
             ToolStripStatusLabel1.Text = "Successful Conected To Sony Remote"
+            Return True
         Catch ex As Exception
             Console.WriteLine("Error:" + ex.ToString)
             ToolStripStatusLabel1.Text = "Cannot Connected To Sony Remote, Please Connect Camera and start Sony Remote"
+            btnStart.Enabled = False
+            Return False
         End Try
-    End Sub
+    End Function
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles btnReconnect.Click
         checkForRemote()
     End Sub
 
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        If btnStart.FlatAppearance.BorderColor = Color.Red Then
+            btnStart.FlatAppearance.BorderColor = Color.Black
+        Else
+            btnStart.FlatAppearance.BorderColor = Color.Red
+        End If
+    End Sub
 End Class

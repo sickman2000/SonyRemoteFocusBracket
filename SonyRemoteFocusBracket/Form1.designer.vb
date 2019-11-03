@@ -6,7 +6,9 @@ Partial Class From1
     Public Shared Amount As Integer = 10     'Number of photos
     Public Shared Coarsness As String = "y"    'Focus speed: y=fast, t=medium, r=slow
     Public Shared Intervall As Integer = 1000   'Time between each shoot in miliseconds
-    Dim KeyStr As New Dictionary(Of String, String) From {{"Coarse", "y"}, {"Medium", "t"}, {"Fine", "r"}}
+    Public Shared KeyStr As New Dictionary(Of String, String) From {{"Coarse", "y"}, {"Medium", "t"}, {"Fine", "r"}}
+    Public Shared strButtonText As New Dictionary(Of Boolean, String) From {{False, "Start Stacking"}, {True, "Stop Stacking"}}
+    Public Shared boStackState As Boolean = False
     'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
     <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
@@ -27,6 +29,7 @@ Partial Class From1
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.btnStart = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtAmount = New System.Windows.Forms.TextBox()
@@ -40,6 +43,9 @@ Partial Class From1
         Me.ToolStripStatusLabel1 = New System.Windows.Forms.ToolStripStatusLabel()
         Me.btnReconnect = New System.Windows.Forms.Button()
         Me.Info = New System.Windows.Forms.Label()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.lblTest = New System.Windows.Forms.Label()
+        Me.cbxShoot = New System.Windows.Forms.CheckBox()
         Me.CoarseBox.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
@@ -167,11 +173,38 @@ Partial Class From1
         Me.Info.TabIndex = 13
         Me.Info.Text = "Info"
         '
+        'Timer1
+        '
+        Me.Timer1.Interval = 500
+        '
+        'lblTest
+        '
+        Me.lblTest.AutoSize = True
+        Me.lblTest.Location = New System.Drawing.Point(357, 12)
+        Me.lblTest.Name = "lblTest"
+        Me.lblTest.Size = New System.Drawing.Size(73, 13)
+        Me.lblTest.TabIndex = 14
+        Me.lblTest.Text = "Stacking Test"
+        '
+        'cbxShoot
+        '
+        Me.cbxShoot.AutoSize = True
+        Me.cbxShoot.Checked = True
+        Me.cbxShoot.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.cbxShoot.Location = New System.Drawing.Point(360, 28)
+        Me.cbxShoot.Name = "cbxShoot"
+        Me.cbxShoot.Size = New System.Drawing.Size(121, 17)
+        Me.cbxShoot.TabIndex = 15
+        Me.cbxShoot.Text = "Don't Shoot Camera"
+        Me.cbxShoot.UseVisualStyleBackColor = True
+        '
         'From1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(504, 191)
+        Me.Controls.Add(Me.cbxShoot)
+        Me.Controls.Add(Me.lblTest)
         Me.Controls.Add(Me.Info)
         Me.Controls.Add(Me.btnReconnect)
         Me.Controls.Add(Me.StatusStrip1)
@@ -209,4 +242,7 @@ Partial Class From1
     Friend WithEvents ToolStripStatusLabel1 As ToolStripStatusLabel
     Friend WithEvents btnReconnect As Button
     Friend WithEvents Info As Label
+    Friend WithEvents Timer1 As Timer
+    Friend WithEvents lblTest As Label
+    Friend WithEvents cbxShoot As CheckBox
 End Class
